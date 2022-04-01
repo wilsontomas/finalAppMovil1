@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">tvshowapp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="loginTitle">Inicio de sesion</string>
+    <string name="loginBtn">Ingresar</string>
+    <string name="loginNamelLabel">Nombre de usuario</string>
+    <string name="loginPasswordLabel">clave</string>
+    <string name="logOutBtnText">Cerrar Sesion</string>
+    <string name="loginForgot">Ya tienes cuenta? Inicia sesion</string>
+    <string name="registerBtn">No tienes cuenta? registrate aqui</string>
+    <string name="registerTitle">Creacion de usuario</string>
+    <string name="registerBtnAction">Crear usuario</string>
+    <string name="registerNamelLabel">Usuario</string>
+    <string name="registerPassword">Clave</string>
+    <string name="registerPasswordConfirm">Confirmar clave</string>
+
+
+    <string name="perfiltxt">Perfil del Usuario</string>
+    <string name="plusDesc">Agregar</string>
+
+    <string name="MenuTask">Lista de Tareas</string>
+    <string name="backBtn">Cancelar</string>
+    <string name="userName">Usuario</string>
+    <string name="nombre">Nombre</string>
+    <string name="apellido">Apellido</string>
+    <string name="sexo">Sexo</string>
+    <string name="telefono">Telefono</string>
+    <string name="fecha">Fecha de nacimiento</string>
+    <string name="pais">Pais</string>
+    <string name="provincia">Provincia</string>
+    <string name="correo">Correo</string>
+    <string name="direccion">Direccion</string>
+    <string name="radioMale">Hombre</string>
+    <string name="radioFemale">Mujer</string>
+
+
+    <string name="forgotPasswordBtn">Olvidaste tu clave? click aqui</string>
+    <string name="forgotPasswordAction">Recuperar</string>
+    <string name="forgotTitle">Menu de recuperacion</string>
+    <string name="forgotName">Nombre de usuario</string>
+
+    <string name="logOut">Cerrar sesion</string>
+
+    <string name="cancel">Volver al login</string>
+
+    <string name="estado">Estado</string>
+    <string name="completado">Completado</string>
+    <string name="cancelado">cancelado</string>
+    <string name="pendiente">pendiente</string>
+    <string name="erase">Borrar tarea</string>
+
+    <string name="profileTitulo">Perfil</string>
+    <string name="hintNombre">Ingrese el nombre</string>
+    <string name="hintApellido">Ingrese el apellido</string>
+</resources>
