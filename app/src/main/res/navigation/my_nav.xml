@@ -31,6 +31,9 @@
         <action
             android:id="@+id/action_registerFragment_to_forgotFragment"
             app:destination="@id/forgotFragment" />
+        <action
+            android:id="@+id/action_registerFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
     </fragment>
     <fragment
         android:id="@+id/forgotFragment"
@@ -70,6 +73,9 @@
         <action
             android:id="@+id/action_favoritesFragment_to_menuFragment"
             app:destination="@id/menuFragment" />
+        <action
+            android:id="@+id/action_favoritesFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"

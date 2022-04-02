@@ -20,7 +20,7 @@
     <string name="perfiltxt">Perfil del Usuario</string>
     <string name="plusDesc">Agregar</string>
 
-    <string name="MenuTask">Lista de Tareas</string>
+    <string name="MenuTask">Lista de Peliculas</string>
     <string name="backBtn">Cancelar</string>
     <string name="userName">Usuario</string>
     <string name="nombre">Nombre</string>
@@ -34,6 +34,7 @@
     <string name="direccion">Direccion</string>
     <string name="radioMale">Hombre</string>
     <string name="radioFemale">Mujer</string>
+    <string name="Editar">Actualizar</string>
 
 
     <string name="forgotPasswordBtn">Olvidaste tu clave? click aqui</string>
@@ -54,4 +55,5 @@
     <string name="profileTitulo">Perfil</string>
     <string name="hintNombre">Ingrese el nombre</string>
     <string name="hintApellido">Ingrese el apellido</string>
+    <string name="Favorites">Ver favoritos</string>
 </resources>

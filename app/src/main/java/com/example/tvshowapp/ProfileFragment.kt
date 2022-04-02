@@ -1,10 +1,17 @@
 package com.example.tvshowapp
 
+import Data.profile_table
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import com.example.tvshowapp.databinding.FragmentProfileBinding
+import com.google.firebase.auth.FirebaseAuth
+import service.tasksViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -20,7 +27,12 @@ class ProfileFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
+    private  lateinit var firebaseAuth: FirebaseAuth;
+    private lateinit var profileId: profile_table;
+    private  var _binding: FragmentProfileBinding? =null;
+    private val binding get() = _binding!!;
+    private lateinit var view1:View;
+    private lateinit var viewModel: tasksViewModel;
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -33,10 +45,45 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile, container, false)
-    }
+        super.onCreateView(inflater, container, savedInstanceState)
+        _binding = FragmentProfileBinding.inflate(inflater, container, false)
+        val view = binding.root
+        view1 = view;
+        firebaseAuth = FirebaseAuth.getInstance();
+        viewModel = ViewModelProvider(requireActivity())[tasksViewModel::class.java];
 
+        binding.profileNombre.setText(viewModel.selectedProfile.name);
+        binding.profileApellido.setText(viewModel.selectedProfile.lastName);
+        if(viewModel.selectedProfile.sex=="hombre"){
+            binding.profileRadioSexo1.isChecked =true;
+        }else{
+            binding.profileRadioSexo2.isChecked =true;
+        }
+        profileId = viewModel.selectedProfile;
+        binding.editActionProfile.setOnClickListener {
+            editarProfile();
+            Toast.makeText(view.context,"Se actualizo el perfil", Toast.LENGTH_SHORT).show();
+            // Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_menuFragment);
+        }
+        binding.backProfileBtn.setOnClickListener {
+            Navigation.findNavController(view).navigate(R.id.action_profileFragment_to_menuFragment);
+        }
+        // Inflate the layout for this fragment
+        // Picasso.get().load(R.drawable.perfil).into(binding.profileImg);
+        return view;
+    }
+    override fun onStart() {
+        super.onStart()
+        if(firebaseAuth.currentUser == null){
+            Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_loginFragment);
+        }
+
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null;
+
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -55,5 +102,18 @@ class ProfileFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+    fun editarProfile(){
+        if(binding.profileNombre.text.isNullOrEmpty() || binding.profileApellido.text.isNullOrEmpty()){
+            Toast.makeText(view1.context,"Debe llenar los datos del usuario",Toast.LENGTH_SHORT).show()
+        }else{
+            var sexo:String;
+            if(binding.profileRadioSexo1.isChecked){
+                sexo="hombre";
+            }else{
+                sexo="mujer";
+            }
+            viewModel.updateProfile(profileId.userId,binding.profileNombre.text.toString(),binding.profileApellido.text.toString(),sexo);
+        }
     }
 }

@@ -3,12 +3,86 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".MenuFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_gravity="center"
+        android:id="@+id/menuId"
+        android:background="@color/menu"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageViewMenu"
+                android:layout_width="200dp"
+                android:layout_centerHorizontal="true"
+                android:layout_height="200dp"
+
+                android:src="@drawable/moviesicon" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:id="@+id/menuTxtId"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="50dp"
+                android:layout_marginLeft="50dp"
+                android:layout_below="@id/imageViewMenu"
+                android:text="@string/MenuTask"
+                android:textColor="@color/white"
+                android:textAlignment="center"
+                android:textSize="30sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/taskRecycler"
+                android:layout_width="match_parent"
+                android:layout_height="350dp"
+                android:layout_below="@id/menuTxtId"
+                android:background="@color/white" />
+            <Button
+                android:id="@+id/favoriteBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cancel_btn"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/taskRecycler"
+                android:textColor="@color/white"
+                android:text="@string/Favorites" />
+            <Button
+                android:id="@+id/profileBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cancel_btn"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/favoriteBtn"
+                android:textColor="@color/white"
+                android:text="@string/profileTitulo" />
+            <Button
+                android:id="@+id/logOutBtnAction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/cancel_btn"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/profileBtn"
+                android:textColor="@color/white"
+                android:text="@string/logOut" />
+
+
+        </RelativeLayout>
+    </ScrollView>
+
 
 </FrameLayout>

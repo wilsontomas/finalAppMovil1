@@ -1,10 +1,22 @@
 package com.example.tvshowapp
 
+import Data.task_table
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.Navigation
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.tvshowapp.databinding.FragmentMenuBinding
+import com.google.firebase.auth.FirebaseAuth
+import model.UserData
+import service.TaskAdapter
+import service.tasksViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -21,6 +33,16 @@ class MenuFragment : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private  lateinit var firebaseAuth: FirebaseAuth;
+    private  var _binding:FragmentMenuBinding? =null;
+    private val binding get() = _binding!!;
+    private lateinit var viewModel: tasksViewModel;
+    private lateinit var lista:List<task_table>;
+    private lateinit var listaFiltrada:List<task_table>;
+    //private lateinit var firebaseDatabase: FirebaseDatabase;
+    private lateinit var view1:View;
+    private lateinit var userData: UserData;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -33,10 +55,81 @@ class MenuFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_menu, container, false)
-    }
+        firebaseAuth = FirebaseAuth.getInstance();
+        _binding = FragmentMenuBinding.inflate(inflater, container, false)
+        val view = binding.root
+        view1 =view;
+      /*  binding.toolbarMenu.inflateMenu(R.menu.task_menu);
+        binding.toolbarMenu.setOnMenuItemClickListener {
+            when(it.itemId){
+                R.id.profileMenu->
+                {
+                    Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_profileFragment);
+                    true;
+                }
+                R.id.taskMenu->
+                {
+                    Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_addTaskFragment);
+                    true;
+                }
+                else->false
+            }
+        }*/
+    binding.profileBtn.setOnClickListener {
+        Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_profileFragment);
 
+    }
+        binding.favoriteBtn.setOnClickListener {
+            Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_favoritesFragment);
+
+        }
+
+        viewModel = ViewModelProvider(requireActivity())[tasksViewModel::class.java];
+
+        viewModel.getAllTasks(firebaseAuth.currentUser?.uid!!).observe(viewLifecycleOwner, Observer {
+            if(!it.isNullOrEmpty()){
+                //updateUi(it);
+            }else{
+                Toast.makeText(view1.context,"No hay tareas para mostrar", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        viewModel.getProfileData(firebaseAuth.currentUser?.uid!!).observe(viewLifecycleOwner,
+            Observer {
+                if(it !=null){
+                    viewModel.selectedProfile =it;
+                }
+            })
+        binding.logOutBtnAction.setOnClickListener {
+            logOut(view);
+        }
+        /*
+         viewModel.dataList.observe(viewLifecycleOwner,{
+            listado=it;
+            Toast.makeText(view1.context,listado[0].title,Toast.LENGTH_LONG).show();
+        })
+        viewModel.error.observe(viewLifecycleOwner,{
+            Toast.makeText(view1.context,it,Toast.LENGTH_LONG).show();
+        })
+        viewModel.loadData();
+
+        */
+
+
+        return view;
+    }
+    override fun onStart() {
+        super.onStart()
+        if(firebaseAuth.currentUser == null){
+            Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_loginFragment);
+        }
+
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null;
+
+    }
     companion object {
         /**
          * Use this factory method to create a new instance of
@@ -56,4 +149,64 @@ class MenuFragment : Fragment() {
                 }
             }
     }
+    private fun logOut(view: View){
+        firebaseAuth.signOut();
+        Navigation.findNavController(view).navigate(R.id.action_menuFragment_to_loginFragment);
+    }
+
+    private fun updateUi(listado:List<task_table>){
+        if(!listado.isNullOrEmpty()){
+            lista=listado
+            val adapter = TaskAdapter(lista);
+            adapter.setOnItemClickListener(object :TaskAdapter.onItemClickListener{
+                override fun itemClick(id: Number) {
+
+                   // viewModel.taskId = id;
+                   // Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_taskDetailFragment);
+                    //Toast.makeText(view1.context,id.toString(),Toast.LENGTH_LONG).show();
+                }
+
+            });
+            binding.taskRecycler.adapter = adapter;
+            binding.taskRecycler.layoutManager = LinearLayoutManager(view1.context);
+        }
+
+    }
+
+   /* fun setSpinner(){
+
+// Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter.createFromResource(
+            view1.context,
+            R.array.spinnerList,
+            android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            // Specify the layout to use when the list of choices appears
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            // Apply the adapter to the spinner
+            binding.spinnerBar.adapter = adapter
+        }
+    }*/
+/*
+    fun filtrar(){
+
+        if(binding.spinnerBar.selectedItem.toString()=="ninguno"){
+            listaFiltrada=lista;
+        }else{
+            listaFiltrada=lista.filter { it.state==binding.spinnerBar.selectedItem.toString() }
+        }
+
+        val adapter = TaskAdapter(listaFiltrada);
+        adapter.setOnItemClickListener(object :TaskAdapter.onItemClickListener{
+            override fun itemClick(id: Number) {
+
+                viewModel.taskId = id;
+                Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_taskDetailFragment);
+                //Toast.makeText(view1.context,id.toString(),Toast.LENGTH_LONG).show();
+            }
+
+        });
+        binding.taskRecycler.adapter = adapter;
+        binding.taskRecycler.layoutManager = LinearLayoutManager(view1.context);
+    }*/
 }
