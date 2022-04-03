@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tvshowapp.databinding.FragmentMenuBinding
 import com.google.firebase.auth.FirebaseAuth
 import model.UserData
+import model.requestData
+import model.tv_shows_model
+import service.DataViewModel
 import service.TaskAdapter
 import service.tasksViewModel
 
@@ -37,8 +40,9 @@ class MenuFragment : Fragment() {
     private  var _binding:FragmentMenuBinding? =null;
     private val binding get() = _binding!!;
     private lateinit var viewModel: tasksViewModel;
-    private lateinit var lista:List<task_table>;
-    private lateinit var listaFiltrada:List<task_table>;
+    private lateinit var viewModelShows: DataViewModel;
+    private lateinit var lista:List<tv_shows_model>;
+    //private lateinit var listaFiltrada:List<task_table>;
     //private lateinit var firebaseDatabase: FirebaseDatabase;
     private lateinit var view1:View;
     private lateinit var userData: UserData;
@@ -59,22 +63,7 @@ class MenuFragment : Fragment() {
         _binding = FragmentMenuBinding.inflate(inflater, container, false)
         val view = binding.root
         view1 =view;
-      /*  binding.toolbarMenu.inflateMenu(R.menu.task_menu);
-        binding.toolbarMenu.setOnMenuItemClickListener {
-            when(it.itemId){
-                R.id.profileMenu->
-                {
-                    Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_profileFragment);
-                    true;
-                }
-                R.id.taskMenu->
-                {
-                    Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_addTaskFragment);
-                    true;
-                }
-                else->false
-            }
-        }*/
+    binding.taskRecycler.adapter = TaskAdapter(emptyList());
     binding.profileBtn.setOnClickListener {
         Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_profileFragment);
 
@@ -85,15 +74,24 @@ class MenuFragment : Fragment() {
         }
 
         viewModel = ViewModelProvider(requireActivity())[tasksViewModel::class.java];
-
-        viewModel.getAllTasks(firebaseAuth.currentUser?.uid!!).observe(viewLifecycleOwner, Observer {
+        viewModelShows=ViewModelProvider(requireActivity())[DataViewModel::class.java];
+      /*  viewModelShows.dataList(firebaseAuth.currentUser?.uid!!).observe(viewLifecycleOwner, Observer {
             if(!it.isNullOrEmpty()){
                 //updateUi(it);
             }else{
                 Toast.makeText(view1.context,"No hay tareas para mostrar", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
+        viewModelShows.dataList.observe(viewLifecycleOwner, Observer {
+            if(it !==null){
+                updateUi(it);
+                Toast.makeText(view1.context,it.total, Toast.LENGTH_SHORT).show();
 
+            }else{
+                Toast.makeText(view1.context,"No hay peliculas para mostrar", Toast.LENGTH_SHORT).show();
+            }
+        })
+        viewModelShows.loadData();
         viewModel.getProfileData(firebaseAuth.currentUser?.uid!!).observe(viewLifecycleOwner,
             Observer {
                 if(it !=null){
@@ -154,22 +152,24 @@ class MenuFragment : Fragment() {
         Navigation.findNavController(view).navigate(R.id.action_menuFragment_to_loginFragment);
     }
 
-    private fun updateUi(listado:List<task_table>){
-        if(!listado.isNullOrEmpty()){
-            lista=listado
+    private fun updateUi(listado:requestData){
+
+            lista=listado.tv_show.take(20);
             val adapter = TaskAdapter(lista);
             adapter.setOnItemClickListener(object :TaskAdapter.onItemClickListener{
                 override fun itemClick(id: Number) {
 
                    // viewModel.taskId = id;
                    // Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_taskDetailFragment);
-                    //Toast.makeText(view1.context,id.toString(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(view1.context,id.toString(),Toast.LENGTH_LONG).show();
                 }
 
             });
-            binding.taskRecycler.adapter = adapter;
+        Toast.makeText(view1.context,"atachando",Toast.LENGTH_LONG).show();
+
+        binding.taskRecycler.adapter = adapter;
             binding.taskRecycler.layoutManager = LinearLayoutManager(view1.context);
-        }
+
 
     }
 

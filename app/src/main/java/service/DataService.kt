@@ -10,15 +10,15 @@ import retrofit2.http.GET
 
 interface DataService {
 
-    @GET("/todos")
-    fun getTotalTodo():Call<List<requestData>>
+    @GET("most-popular?page=1")
+    fun getTotalTvShows():Call<requestData>
 
     companion object{
         private var _instance:DataService?=null;
         fun getInstance():DataService{
             if(_instance==null){
                 val retrofit = Retrofit.Builder()
-                    .baseUrl("https://jsonplaceholder.typicode.com")
+                    .baseUrl("https://www.episodate.com/api/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(OkHttpClient.Builder().build()).build();
                 _instance = retrofit.create(DataService::class.java);

@@ -1,8 +1,8 @@
 package model
 
 class requestData {
-    var userId:Int=0;
-    var id:Int=0;
-    var title:String=""
-    var completed:Boolean=false;
+    var total:String="";
+    var page:Int=0;
+    var pages:Int=0;
+    var tv_show:List<tv_shows_model> = emptyList();
 }

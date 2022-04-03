@@ -48,7 +48,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="350dp"
                 android:layout_below="@id/menuTxtId"
-                android:background="@color/white" />
+                android:background="@color/white"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                />
             <Button
                 android:id="@+id/favoriteBtn"
                 android:layout_width="wrap_content"
