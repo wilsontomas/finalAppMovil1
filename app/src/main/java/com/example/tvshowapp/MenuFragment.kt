@@ -85,7 +85,7 @@ class MenuFragment : Fragment() {
         viewModelShows.dataList.observe(viewLifecycleOwner, Observer {
             if(it !==null){
                 updateUi(it);
-                Toast.makeText(view1.context,it.total, Toast.LENGTH_SHORT).show();
+                Toast.makeText(view1.context,it.tv_shows[0].name, Toast.LENGTH_SHORT).show();
 
             }else{
                 Toast.makeText(view1.context,"No hay peliculas para mostrar", Toast.LENGTH_SHORT).show();
@@ -154,7 +154,7 @@ class MenuFragment : Fragment() {
 
     private fun updateUi(listado:requestData){
 
-            lista=listado.tv_show.take(20);
+            lista=listado.tv_shows.take(20);
             val adapter = TaskAdapter(lista);
             adapter.setOnItemClickListener(object :TaskAdapter.onItemClickListener{
                 override fun itemClick(id: Number) {
@@ -170,6 +170,13 @@ class MenuFragment : Fragment() {
         binding.taskRecycler.adapter = adapter;
             binding.taskRecycler.layoutManager = LinearLayoutManager(view1.context);
 
+
+    }
+
+   fun toggleFavorites(position:Int,userId:String){
+
+    }
+    fun favoriteExist(position:Int,userId:String){
 
     }
 
