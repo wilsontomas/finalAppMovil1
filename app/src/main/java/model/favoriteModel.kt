@@ -1,7 +1,7 @@
 package model
 
 class favoriteModel {
-    var Id:Int=0;
-    var UserId:String="";
-    var TvShowId:String="";
+    var id:Int=0;
+    var userId:String="";
+    var tvShowId:String="";
 }

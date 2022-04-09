@@ -33,6 +33,7 @@ class ProfileFragment : Fragment() {
     private val binding get() = _binding!!;
     private lateinit var view1:View;
     private lateinit var viewModel: tasksViewModel;
+    private lateinit var profile:profile_table
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -51,15 +52,21 @@ class ProfileFragment : Fragment() {
         view1 = view;
         firebaseAuth = FirebaseAuth.getInstance();
         viewModel = ViewModelProvider(requireActivity())[tasksViewModel::class.java];
+        viewModel.getProfileData(firebaseAuth.currentUser!!.uid.toString()).observe(viewLifecycleOwner,{
+           if(it !==null){
+               profile =it;
+               binding.profileNombre.setText(profile.name);
+               binding.profileApellido.setText(profile.lastName);
+               if(profile.sex=="hombre"){
+                   binding.profileRadioSexo1.isChecked =true;
+               }else{
+                   binding.profileRadioSexo2.isChecked =true;
+               }
+               profileId = profile;
+           }
 
-        binding.profileNombre.setText(viewModel.selectedProfile.name);
-        binding.profileApellido.setText(viewModel.selectedProfile.lastName);
-        if(viewModel.selectedProfile.sex=="hombre"){
-            binding.profileRadioSexo1.isChecked =true;
-        }else{
-            binding.profileRadioSexo2.isChecked =true;
-        }
-        profileId = viewModel.selectedProfile;
+        })
+
         binding.editActionProfile.setOnClickListener {
             editarProfile();
             Toast.makeText(view.context,"Se actualizo el perfil", Toast.LENGTH_SHORT).show();

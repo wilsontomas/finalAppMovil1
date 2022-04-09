@@ -59,4 +59,6 @@
     <string name="titulo">Titulo:</string>
     <string name="genero">Genero:</string>
     <string name="year">Año:</string>
+    <string name="favoriteTitle">Peliculas Favoritas</string>
+
 </resources>

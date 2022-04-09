@@ -15,9 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.tvshowapp.databinding.FragmentMenuBinding
 import com.google.firebase.auth.FirebaseAuth
 import model.UserData
+import model.favoriteModel
 import model.requestData
 import model.tv_shows_model
 import service.DataViewModel
+import service.FavoriteViewModel
 import service.TaskAdapter
 import service.tasksViewModel
 
@@ -41,11 +43,9 @@ class MenuFragment : Fragment() {
     private val binding get() = _binding!!;
     private lateinit var viewModel: tasksViewModel;
     private lateinit var viewModelShows: DataViewModel;
+    private lateinit var viewModelFavorites: FavoriteViewModel;
     private lateinit var lista:List<tv_shows_model>;
-    //private lateinit var listaFiltrada:List<task_table>;
-    //private lateinit var firebaseDatabase: FirebaseDatabase;
     private lateinit var view1:View;
-    private lateinit var userData: UserData;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +75,7 @@ class MenuFragment : Fragment() {
 
         viewModel = ViewModelProvider(requireActivity())[tasksViewModel::class.java];
         viewModelShows=ViewModelProvider(requireActivity())[DataViewModel::class.java];
+        viewModelFavorites=ViewModelProvider(requireActivity())[FavoriteViewModel::class.java];
       /*  viewModelShows.dataList(firebaseAuth.currentUser?.uid!!).observe(viewLifecycleOwner, Observer {
             if(!it.isNullOrEmpty()){
                 //updateUi(it);
@@ -85,7 +86,7 @@ class MenuFragment : Fragment() {
         viewModelShows.dataList.observe(viewLifecycleOwner, Observer {
             if(it !==null){
                 updateUi(it);
-                Toast.makeText(view1.context,it.tv_shows[0].name, Toast.LENGTH_SHORT).show();
+
 
             }else{
                 Toast.makeText(view1.context,"No hay peliculas para mostrar", Toast.LENGTH_SHORT).show();
@@ -159,13 +160,17 @@ class MenuFragment : Fragment() {
             adapter.setOnItemClickListener(object :TaskAdapter.onItemClickListener{
                 override fun itemClick(id: Number) {
 
-                   // viewModel.taskId = id;
-                   // Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_taskDetailFragment);
-                    Toast.makeText(view1.context,id.toString(),Toast.LENGTH_LONG).show();
+
+                    var fav:favoriteModel = favoriteModel();
+                    fav.userId=firebaseAuth.currentUser!!.uid;
+                    fav.tvShowId=id.toString();
+                    viewModelFavorites.add(fav,view1.context);
+                    Toast.makeText(view1.context,lista[id.toInt()].name+" se agrego a favoritos",Toast.LENGTH_LONG).show();
+
                 }
 
             });
-        Toast.makeText(view1.context,"atachando",Toast.LENGTH_LONG).show();
+       // Toast.makeText(view1.context,"atachando",Toast.LENGTH_LONG).show();
 
         binding.taskRecycler.adapter = adapter;
             binding.taskRecycler.layoutManager = LinearLayoutManager(view1.context);

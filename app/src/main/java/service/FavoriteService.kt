@@ -1,26 +1,38 @@
 package service
 
+import model.favoriteModel
 import model.requestData
+import model.tv_shows_model
 import okhttp3.OkHttpClient
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Url
+import retrofit2.http.*
 
 interface FavoriteService {
-    @GET("most-popular?page=1")
-    fun getAllFavorites(@Url url:String,): Call<requestData>
+    @GET("{userId}")
+    fun getAllFavorites(@Path("userId") userId:String): Call<List<favoriteModel>>
+
+    @GET("exist/{userId}/{position}")
+    fun verifyExist(@Path("userId") id:String,@Path("position") position:Int):Call<Boolean>
+
+    @POST("add")
+    fun add(@Body valor:favoriteModel):Call<List<String>>
+
+    @DELETE("delete/{userId}/{position}")
+    fun remove(@Path("userId") userId:String,@Path("position") position:Int ):Call<List<String>>
+
 
     companion object{
-        private var _instance:DataService?=null;
-        fun getInstance():DataService{
+        private var _instance:FavoriteService?=null;
+        fun getInstance():FavoriteService{
             if(_instance==null){
                 val retrofit = Retrofit.Builder()
-                    .baseUrl("https://www.episodate.com/api/")
+                    .baseUrl("http://0c37-181-36-66-217.ngrok.io/api/favorites/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(OkHttpClient.Builder().build()).build();
-                _instance = retrofit.create(DataService::class.java);
+                _instance = retrofit.create(FavoriteService::class.java);
             }
             return _instance!!;
         }
