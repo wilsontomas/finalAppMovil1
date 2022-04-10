@@ -1,5 +1,7 @@
 package com.example.tvshowapp
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Patterns
 import androidx.fragment.app.Fragment
@@ -64,7 +66,10 @@ class ForgotFragment : Fragment() {
         }
 
         binding.forgotBtnAction2.setOnClickListener {
-            sendEmail(view);
+            if(!isConnected()){
+                sendEmail(view);
+            }
+
         }
 
 
@@ -104,7 +109,16 @@ class ForgotFragment : Fragment() {
                 }
             }
     }
+    fun isConnected():Boolean{
+        val cm = context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager;
+        val cp = cm.getNetworkCapabilities(cm.activeNetwork);
+        if(cp ==null){
+            Toast.makeText(view1.context,"No hay conexion a internet",Toast.LENGTH_SHORT).show();
 
+            return true;
+        }
+        return false;
+    }
     private fun navigateMethod(view:View,action:Int){
         Navigation.findNavController(view).navigate(action);
 

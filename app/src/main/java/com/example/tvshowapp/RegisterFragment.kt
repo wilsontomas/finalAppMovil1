@@ -1,6 +1,8 @@
 package com.example.tvshowapp
 
 import Data.profile_table
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Patterns
 import androidx.fragment.app.Fragment
@@ -69,7 +71,10 @@ class RegisterFragment : Fragment() {
             navigateMethod(view,R.id.action_registerFragment_to_loginFragment);
         }
         binding.CrearBtn.setOnClickListener {
-            signUp(view);
+            if(!isConnected()){
+                signUp(view);
+            }
+
         }
         //end methods
         viewModel = ViewModelProvider(requireActivity())[tasksViewModel::class.java];
@@ -106,6 +111,16 @@ class RegisterFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+    fun isConnected():Boolean{
+        val cm = context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager;
+        val cp = cm.getNetworkCapabilities(cm.activeNetwork);
+        if(cp ==null){
+            Toast.makeText(view1.context,"No hay conexion a internet",Toast.LENGTH_SHORT).show();
+
+            return true;
+        }
+        return false;
     }
     private fun validateEmail(email:String):Boolean{
         val pattern: Pattern = Patterns.EMAIL_ADDRESS;

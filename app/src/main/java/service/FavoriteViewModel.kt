@@ -68,7 +68,9 @@ class FavoriteViewModel(): ViewModel() {
                     call: Call<List<String>>,
                     response: Response<List<String>>
                 ) {
-                  Toast.makeText(context,"Se removio",Toast.LENGTH_SHORT).show();
+                 // Toast.makeText(context,"Se removio",Toast.LENGTH_SHORT).show();
+                    loadData(userId,context);
+                    _favoriteList.value = _favoriteList.value!!.filter { x->x.tvShowId !=position.toString() }
                 }
 
                 override fun onFailure(call: Call<List<String>>, t: Throwable) {

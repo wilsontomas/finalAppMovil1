@@ -1,6 +1,9 @@
 package com.example.tvshowapp
 
 import Data.task_table
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkInfo
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -122,6 +125,11 @@ class MenuFragment : Fragment() {
         if(firebaseAuth.currentUser == null){
             Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_loginFragment);
         }
+        if(isConnected()){
+            firebaseAuth.signOut();
+            Navigation.findNavController(view1).navigate(R.id.action_menuFragment_to_loginFragment);
+        }
+
 
     }
     override fun onDestroyView() {
@@ -161,10 +169,12 @@ class MenuFragment : Fragment() {
                 override fun itemClick(id: Number) {
 
 
-                    var fav:favoriteModel = favoriteModel();
+                    val fav:favoriteModel = favoriteModel();
                     fav.userId=firebaseAuth.currentUser!!.uid;
-                    fav.tvShowId=id.toString();
+
+                    fav.tvShowId=lista[id.toInt()].id.toString();
                     viewModelFavorites.add(fav,view1.context);
+                   // val showFiltrado = lista.find { x->x.id==id };
                     Toast.makeText(view1.context,lista[id.toInt()].name+" se agrego a favoritos",Toast.LENGTH_LONG).show();
 
                 }
@@ -176,6 +186,16 @@ class MenuFragment : Fragment() {
             binding.taskRecycler.layoutManager = LinearLayoutManager(view1.context);
 
 
+    }
+    fun isConnected():Boolean{
+        val cm = context!!.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager;
+        val cp = cm.getNetworkCapabilities(cm.activeNetwork);
+        if(cp ==null){
+            Toast.makeText(view1.context,"No hay conexion a internet",Toast.LENGTH_SHORT).show();
+
+            return true;
+        }
+        return false;
     }
 
    fun toggleFavorites(position:Int,userId:String){

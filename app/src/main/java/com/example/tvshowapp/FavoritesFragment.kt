@@ -74,7 +74,10 @@ class FavoritesFragment : Fragment() {
         viewModelFavorites.favoriteList.observe(viewLifecycleOwner, Observer {
             var iterador = viewModelShows.dataList.value;
             if(iterador !==null){
+    if(it.isEmpty()){
+        Toast.makeText(view1.context,"No hay favoritos para mostrar", Toast.LENGTH_SHORT).show();
 
+    }
                 updateUi(iterador,it);
 
 
@@ -129,8 +132,10 @@ class FavoritesFragment : Fragment() {
 
     private fun updateUi(listado: requestData, listadoFavoritos:List<favoriteModel>){
 
-        val listaOrigen=listado.tv_shows.take(20);
-        var lista = listaOrigen.filterIndexed{index, tvShowsModel ->listadoFavoritos.any { it.tvShowId==index.toString() }  }
+        val listaOrigen=listado.tv_shows.take(25);
+        //var lista = listaOrigen.filterIndexed{index, tvShowsModel ->listadoFavoritos.any { it.tvShowId==index.toString() }  }
+        //var lista = listaOrigen.filterIndexed{index, tvShowsModel-> listadoFavoritos.any{}}
+        var lista = listaOrigen.filter{x->listadoFavoritos.any{it.tvShowId==x.id.toString()}}
        // lista = lista.filterIndexed{index, tvShowsModel -> listadoFavoritos.any { it.TvShowId==index.toString() } }
 
 
@@ -141,14 +146,17 @@ class FavoritesFragment : Fragment() {
             override fun itemClick(id: Number) {
 
 
-                viewModelFavorites.remove(firebaseAuth.currentUser!!.uid,id.toInt(),view1.context);
-                Toast.makeText(view1.context,lista[id.toInt()].name+" se removio a favoritos",Toast.LENGTH_LONG).show();
-
+               viewModelFavorites.remove(firebaseAuth.currentUser!!.uid,lista[id.toInt()].id,view1.context);
+                val showfiltrado = lista[id.toInt()].name
+                Toast.makeText(view1.context,showfiltrado+" se removio a favoritos",Toast.LENGTH_LONG).show();
+                viewModelFavorites.loadData(firebaseAuth.currentUser!!.uid,view1.context);
+                val nuevaLista = viewModelFavorites.favoriteList.value!!.filter{x->x.tvShowId !=id.toString()}
+                updateUi(listado,nuevaLista);
 
             }
 
         });
-        Toast.makeText(view1.context,"atachando",Toast.LENGTH_LONG).show();
+       // Toast.makeText(view1.context,"atachando",Toast.LENGTH_LONG).show();
 
         binding.taskRecycler2.adapter = adapter;
         binding.taskRecycler2.layoutManager = LinearLayoutManager(view1.context);

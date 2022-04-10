@@ -17,7 +17,7 @@ import model.tv_shows_model
 class TaskAdapter(
     var tvshows:List<tv_shows_model>
 ): RecyclerView.Adapter<TaskAdapter.movieViewHolder>() {
-   // private lateinit var Id:Number;
+    private lateinit var Id:Number;
     private lateinit var mListener:onItemClickListener
     interface onItemClickListener{
         fun itemClick(id:Number)
@@ -53,6 +53,7 @@ class TaskAdapter(
 
     override fun onBindViewHolder(holder: movieViewHolder, position: Int) {
         val TvShow = tvshows!![position];
+        Id=TvShow.id;
         Picasso.get().load(TvShow.image_thumbnail_path)
             .placeholder(R.drawable.placeholder)
             .centerCrop()
