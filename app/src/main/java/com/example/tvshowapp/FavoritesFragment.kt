@@ -76,10 +76,8 @@ class FavoritesFragment : Fragment() {
             if(iterador !==null){
     if(it.isEmpty()){
         Toast.makeText(view1.context,"No hay favoritos para mostrar", Toast.LENGTH_SHORT).show();
-
     }
                 updateUi(iterador,it);
-
 
             }else{
                 Toast.makeText(view1.context,"No hay peliculas para mostrar", Toast.LENGTH_SHORT).show();

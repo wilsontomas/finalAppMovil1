@@ -29,7 +29,7 @@ interface FavoriteService {
         fun getInstance():FavoriteService{
             if(_instance==null){
                 val retrofit = Retrofit.Builder()
-                    .baseUrl("http://fd7f-181-36-66-217.ngrok.io/api/favorites/")
+                    .baseUrl("http://d485-181-36-66-217.ngrok.io/api/favorites/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .client(OkHttpClient.Builder().build()).build();
                 _instance = retrofit.create(FavoriteService::class.java);
